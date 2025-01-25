@@ -11,19 +11,20 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/tasks', name: 'task_')]
 class TaskController extends AbstractController
 {
-    #[Route('/', name: 'index', methods: ['GET'])]
+    #[Route('/tasks', name: 'tasks', methods: ['GET'])]
     public function index(TaskRepository $taskRepository): Response
     {
         $tasks = $taskRepository->findAll();
+        $task_new = $taskRepository->getNewId();
         return $this->render('task/index.html.twig', [
             'tasks' => $tasks,
+            'task_new' => $task_new,
         ]);
     }
 
-    #[Route('/create', name: 'create', methods: ['GET', 'POST'])]
+    #[Route('/task/create/{task_new}', name: 'task_create', methods: ['GET', 'POST'])]
     public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
         $task = new Task();
